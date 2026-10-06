@@ -58,3 +58,6 @@ data/     示例成绩数据
 ## 测试
 
 运行 `build.ps1 -Test` 或 `make test` 执行单元测试。
+## 构建前置条件
+
+需要 C++17 编译器；Windows 下可用 MSVC 或 MSYS2 的 g++。
