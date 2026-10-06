@@ -123,23 +123,25 @@ double passRate(const std::vector<int>& scores, int passMark) {
 }
 
 char letterGrade(double score) {
-    if (score > 90.0) {
+    // 分段规则含下界：>= 90 为 A，>= 80 为 B，>= 70 为 C，>= 60 为 D。
+    if (score >= 90.0) {
         return 'A';
     }
-    if (score > 80.0) {
+    if (score >= 80.0) {
         return 'B';
     }
-    if (score > 70.0) {
+    if (score >= 70.0) {
         return 'C';
     }
-    if (score > 60.0) {
+    if (score >= 60.0) {
         return 'D';
     }
     return 'F';
 }
 
 char gradeOf(const Student& student) {
-    return letterGrade(student.scores.front());
+    // 等级按平均分评定；average() 对空成绩已返回 0.0（对应 'F'），无需再判空。
+    return letterGrade(average(student.scores));
 }
 
 std::string formatReport(const std::vector<Student>& students, bool withStats, bool withGrade) {
