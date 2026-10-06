@@ -31,9 +31,17 @@ double median(const std::vector<int>& scores);
 // 及格率：达到及格线（默认 60 分）的成绩占比，取值在 [0,1] 之间。
 double passRate(const std::vector<int>& scores, int passMark = 60);
 
+// 等级评定，分段规则（含下界）：
+//   >= 90 为 'A'，>= 80 为 'B'，>= 70 为 'C'，>= 60 为 'D'，其余为 'F'。
+char letterGrade(double score);
+
+// 按某名学生的平均分给出等级。
+char gradeOf(const Student& student);
+
 // 生成文本报告，每行一名学生，形如：
 //   Zhang San: average=86.67, max=95
-// withStats 为 true 时，每行末尾追加 median 与 passRate。
-std::string formatReport(const std::vector<Student>& students, bool withStats = false);
+// withStats 为 true 时追加 median 与 passRate；
+// withGrade 为 true 时追加 grade。
+std::string formatReport(const std::vector<Student>& students, bool withStats = false, bool withGrade = false);
 
 }  // namespace gradebook

@@ -20,12 +20,13 @@ std::string readFile(const std::string& path) {
 }
 
 void printUsage(const char* program) {
-    std::cout << "usage: " << program << " [scores.csv] [--stats]\n"
+    std::cout << "usage: " << program << " [scores.csv] [--stats] [--grade]\n"
               << "  scores.csv 形如：\n"
               << "    name,math,english\n"
               << "    lisi,88,92\n"
               << "  省略路径时默认读取 data/scores.csv\n"
-              << "  --stats    额外输出中位数与及格率\n";
+              << "  --stats    额外输出中位数与及格率\n"
+              << "  --grade    额外输出等级（A/B/C/D/F）\n";
 }
 
 }  // namespace
@@ -33,6 +34,7 @@ void printUsage(const char* program) {
 int main(int argc, char** argv) {
     std::string path = "data/scores.csv";
     bool withStats = false;
+    bool withGrade = false;
 
     for (int i = 1; i < argc; ++i) {
         const std::string arg = argv[i];
@@ -42,6 +44,10 @@ int main(int argc, char** argv) {
         }
         if (arg == "--stats") {
             withStats = true;
+            continue;
+        }
+        if (arg == "--grade") {
+            withGrade = true;
             continue;
         }
         path = arg;
@@ -60,6 +66,6 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    std::cout << gradebook::formatReport(students, withStats);
+    std::cout << gradebook::formatReport(students, withStats, withGrade);
     return 0;
 }

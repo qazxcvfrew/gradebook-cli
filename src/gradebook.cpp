@@ -122,7 +122,27 @@ double passRate(const std::vector<int>& scores, int passMark) {
     return static_cast<double>(passed) / static_cast<double>(scores.size());
 }
 
-std::string formatReport(const std::vector<Student>& students, bool withStats) {
+char letterGrade(double score) {
+    if (score > 90.0) {
+        return 'A';
+    }
+    if (score > 80.0) {
+        return 'B';
+    }
+    if (score > 70.0) {
+        return 'C';
+    }
+    if (score > 60.0) {
+        return 'D';
+    }
+    return 'F';
+}
+
+char gradeOf(const Student& student) {
+    return letterGrade(student.scores.front());
+}
+
+std::string formatReport(const std::vector<Student>& students, bool withStats, bool withGrade) {
     std::ostringstream out;
     for (const Student& student : students) {
         out << student.name << ": average=" << average(student.scores)
@@ -130,6 +150,9 @@ std::string formatReport(const std::vector<Student>& students, bool withStats) {
         if (withStats) {
             out << ", median=" << median(student.scores)
                 << ", passRate=" << passRate(student.scores);
+        }
+        if (withGrade) {
+            out << ", grade=" << gradeOf(student);
         }
         out << "\n";
     }
