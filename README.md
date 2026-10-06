@@ -54,3 +54,7 @@ data/     示例成绩数据
 - 提交信息：遵循 `<type>: <描述>`，一个提交只做一件事
 - 主分支 `main` 保持可构建、可测试；功能改动走分支 + Pull Request
 - 提交前先 `git pull`，推送前用 `git status` / `git diff` 自查
+
+## 测试
+
+运行 `build.ps1 -Test` 或 `make test` 执行单元测试。
