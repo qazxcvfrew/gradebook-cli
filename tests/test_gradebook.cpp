@@ -65,12 +65,35 @@ void testPassRate() {
     checkClose(gradebook::passRate({50, 40}, 50), 0.5, "passRate 支持自定义及格线");
 }
 
+void testLetterGrade() {
+    check(gradebook::letterGrade(95.0) == 'A', "letterGrade 95 分为 A");
+    check(gradebook::letterGrade(90.0) == 'A', "letterGrade 90 分（下界）为 A");
+    check(gradebook::letterGrade(89.9) == 'B', "letterGrade 89.9 分为 B");
+    check(gradebook::letterGrade(80.0) == 'B', "letterGrade 80 分（下界）为 B");
+    check(gradebook::letterGrade(70.0) == 'C', "letterGrade 70 分（下界）为 C");
+    check(gradebook::letterGrade(60.0) == 'D', "letterGrade 60 分（下界）为 D");
+    check(gradebook::letterGrade(59.9) == 'F', "letterGrade 59.9 分为 F");
+}
+
+void testGradeOf() {
+    const gradebook::Student mixed{"lisi", {95, 40}};  // 平均 67.5
+    check(gradebook::gradeOf(mixed) == 'D', "gradeOf 按平均分评定等级，而不是首次成绩");
+
+    const gradebook::Student empty{"zhaoliu", {}};
+    check(gradebook::gradeOf(empty) == 'F', "gradeOf 对空成绩返回 F（不越界访问）");
+
+    const gradebook::Student top{"zhangsan", {95, 91}};  // 平均 93
+    check(gradebook::gradeOf(top) == 'A', "gradeOf 平均 93 分为 A");
+}
+
 void testFormatReportWithStats() {
     const std::vector<gradebook::Student> students = {{"lisi", {80, 90}}};
     const std::string plain = gradebook::formatReport(students);
     const std::string stats = gradebook::formatReport(students, true);
+    const std::string graded = gradebook::formatReport(students, false, true);
     check(plain.find("median") == std::string::npos, "formatReport 默认不输出统计信息");
     check(stats.find("median=85") != std::string::npos, "formatReport 在 withStats 时输出中位数");
+    check(graded.find("grade=B") != std::string::npos, "formatReport 在 withGrade 时输出等级");
 }
 
 }  // namespace
@@ -81,6 +104,8 @@ int main() {
     testMaxScore();
     testMedian();
     testPassRate();
+    testLetterGrade();
+    testGradeOf();
     testFormatReportWithStats();
 
     if (g_failures == 0) {
