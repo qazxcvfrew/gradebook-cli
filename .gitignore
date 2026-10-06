@@ -1,0 +1,21 @@
+# 构建产物
+build/
+*.exe
+*.obj
+*.o
+*.pdb
+
+# 编辑器与 IDE
+.vscode/
+.idea/
+.vs/
+
+# 本地私有内容：密钥、令牌、临时目录，绝不入库
+.local/
+*.key
+*.pem
+*.token
+
+# 系统文件
+Thumbs.db
+desktop.ini

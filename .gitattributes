@@ -1,0 +1,12 @@
+# 统一换行符：无论 core.autocrlf 如何设置，仓库内一律使用 LF，
+# 避免 Windows 与 Linux 之间出现「整个文件都被修改」的幽灵 diff。
+* text=auto eol=lf
+
+# 明确声明为二进制，禁止任何换行符转换
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.exe binary
+*.pdf binary
