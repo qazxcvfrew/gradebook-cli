@@ -1,6 +1,7 @@
 // gradebook.cpp —— 成绩簿核心实现
 #include "gradebook.h"
 
+#include <algorithm>
 #include <cstddef>
 #include <sstream>
 #include <string>
@@ -94,11 +95,43 @@ int maxScore(const std::vector<int>& scores) {
     return best;
 }
 
-std::string formatReport(const std::vector<Student>& students) {
+double median(const std::vector<int>& scores) {
+    if (scores.empty()) {
+        return 0.0;
+    }
+    std::vector<int> sorted = scores;
+    std::sort(sorted.begin(), sorted.end());
+    const std::size_t middle = sorted.size() / 2;
+    if (sorted.size() % 2 == 1) {
+        return static_cast<double>(sorted[middle]);
+    }
+    // 偶数个成绩：取中间两个数的平均值
+    return (static_cast<double>(sorted[middle - 1]) + static_cast<double>(sorted[middle])) / 2.0;
+}
+
+double passRate(const std::vector<int>& scores, int passMark) {
+    if (scores.empty()) {
+        return 0.0;
+    }
+    int passed = 0;
+    for (int score : scores) {
+        if (score >= passMark) {
+            ++passed;
+        }
+    }
+    return static_cast<double>(passed) / static_cast<double>(scores.size());
+}
+
+std::string formatReport(const std::vector<Student>& students, bool withStats) {
     std::ostringstream out;
     for (const Student& student : students) {
         out << student.name << ": average=" << average(student.scores)
-            << ", max=" << maxScore(student.scores) << "\n";
+            << ", max=" << maxScore(student.scores);
+        if (withStats) {
+            out << ", median=" << median(student.scores)
+                << ", passRate=" << passRate(student.scores);
+        }
+        out << "\n";
     }
     return out.str();
 }

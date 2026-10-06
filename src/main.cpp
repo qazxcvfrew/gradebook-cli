@@ -20,25 +20,33 @@ std::string readFile(const std::string& path) {
 }
 
 void printUsage(const char* program) {
-    std::cout << "usage: " << program << " [scores.csv]\n"
+    std::cout << "usage: " << program << " [scores.csv] [--stats]\n"
               << "  scores.csv 形如：\n"
               << "    name,math,english\n"
               << "    lisi,88,92\n"
-              << "  省略路径时默认读取 data/scores.csv\n";
+              << "  省略路径时默认读取 data/scores.csv\n"
+              << "  --stats    额外输出中位数与及格率\n";
 }
 
 }  // namespace
 
 int main(int argc, char** argv) {
-    if (argc > 1) {
-        const std::string first = argv[1];
-        if (first == "-h" || first == "--help") {
+    std::string path = "data/scores.csv";
+    bool withStats = false;
+
+    for (int i = 1; i < argc; ++i) {
+        const std::string arg = argv[i];
+        if (arg == "-h" || arg == "--help") {
             printUsage(argv[0]);
             return 0;
         }
+        if (arg == "--stats") {
+            withStats = true;
+            continue;
+        }
+        path = arg;
     }
 
-    const std::string path = (argc > 1) ? argv[1] : "data/scores.csv";
     const std::string text = readFile(path);
     if (text.empty()) {
         std::cerr << "cannot read scores from: " << path << "\n";
@@ -52,6 +60,6 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    std::cout << gradebook::formatReport(students);
+    std::cout << gradebook::formatReport(students, withStats);
     return 0;
 }

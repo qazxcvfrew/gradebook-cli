@@ -51,12 +51,37 @@ void testMaxScore() {
     check(gradebook::maxScore({}) == 0, "maxScore 对空成绩返回 0");
 }
 
+void testMedian() {
+    checkClose(gradebook::median({}), 0.0, "median 对空成绩返回 0");
+    checkClose(gradebook::median({90}), 90.0, "median 奇数个成绩取中间值");
+    checkClose(gradebook::median({80, 90, 100}), 90.0, "median 奇数个成绩取中间值（乱序输入）");
+    checkClose(gradebook::median({80, 90}), 85.0, "median 偶数个成绩取中间两个的平均");
+    checkClose(gradebook::median({70, 100, 80, 90}), 85.0, "median 偶数个成绩取中间两个的平均（乱序输入）");
+}
+
+void testPassRate() {
+    checkClose(gradebook::passRate({}), 0.0, "passRate 对空成绩返回 0（不除零）");
+    checkClose(gradebook::passRate({59, 60, 100}), 2.0 / 3.0, "passRate 按及格线统计占比");
+    checkClose(gradebook::passRate({50, 40}, 50), 0.5, "passRate 支持自定义及格线");
+}
+
+void testFormatReportWithStats() {
+    const std::vector<gradebook::Student> students = {{"lisi", {80, 90}}};
+    const std::string plain = gradebook::formatReport(students);
+    const std::string stats = gradebook::formatReport(students, true);
+    check(plain.find("median") == std::string::npos, "formatReport 默认不输出统计信息");
+    check(stats.find("median=85") != std::string::npos, "formatReport 在 withStats 时输出中位数");
+}
+
 }  // namespace
 
 int main() {
     testParseCSV();
     testAverage();
     testMaxScore();
+    testMedian();
+    testPassRate();
+    testFormatReportWithStats();
 
     if (g_failures == 0) {
         std::cout << "\nall tests passed\n";
