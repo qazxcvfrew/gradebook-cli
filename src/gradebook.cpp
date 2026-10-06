@@ -101,10 +101,18 @@ double median(const std::vector<int>& scores) {
     }
     std::vector<int> sorted = scores;
     std::sort(sorted.begin(), sorted.end());
-    return sorted[sorted.size() / 2];
+    const std::size_t middle = sorted.size() / 2;
+    if (sorted.size() % 2 == 1) {
+        return static_cast<double>(sorted[middle]);
+    }
+    // 偶数个成绩：取中间两个数的平均值
+    return (static_cast<double>(sorted[middle - 1]) + static_cast<double>(sorted[middle])) / 2.0;
 }
 
 double passRate(const std::vector<int>& scores, int passMark) {
+    if (scores.empty()) {
+        return 0.0;
+    }
     int passed = 0;
     for (int score : scores) {
         if (score >= passMark) {
